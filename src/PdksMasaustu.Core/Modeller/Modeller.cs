@@ -80,5 +80,18 @@ public sealed record EkipGecmisKaydi(int Id, HareketTipi Tip, DateTimeOffset Zam
 
 internal sealed record EkipGecmisYaniti(IReadOnlyList<EkipGecmisKaydi> Kayitlar);
 
+/// <summary>
+/// PUT masaustu/cihaz: bu bilgisayarın uzak yönetimdeki kaydı. Açıklama sunucuda
+/// giriş yapan personelin adıyla yazılır; istemci açıklama göndermez.
+/// </summary>
+public sealed record UzakCihaz(
+    string BilgisayarAdi,
+    string? Aciklama,
+    string? Grup,
+    string? AnyDeskId,
+    string? RustDeskId,
+    DateTimeOffset? SonGorulme,
+    bool Cevrimici);
+
 /// <summary>GET ayarlar: portal marka ayarları (tanim_site_ayarlari). Adresler site köküne göre olabilir.</summary>
 public sealed record MarkaAyarlari(string? Baslik, string? LogoUrl, string? FaviconUrl, string? SiteUrl);

@@ -2,6 +2,13 @@
 
 Biçim [Keep a Changelog](https://keepachangelog.com/tr-TR/1.1.0/), sürümleme [Semantic Versioning](https://semver.org/lang/tr/) esaslıdır.
 
+## [0.2.0] - 2026-10-05
+
+### Eklendi
+- "Bu bilgisayar" kartı: uygulama açılışta bilgisayarı uzak yönetimdeki kaydıyla eşleştirir; cihaz açıklamasına giriş yapan personelin adı yazılır, bilgisayar adı ve AnyDesk numarası gösterilir.
+- Eşleştirme sonucu karta yazılır: ajan kurulu değil, kimlik tanınmadı ya da bağlantı tanımsız.
+- Üreticinin doldurmadığı yer tutucu anakart UUID'leri gönderilmez; yanlış cihaza yazma önlenir.
+
 ## [0.1.3] - 2026-10-05
 
 ### Değişti

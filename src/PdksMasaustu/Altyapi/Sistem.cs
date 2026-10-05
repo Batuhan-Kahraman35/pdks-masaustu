@@ -1,4 +1,5 @@
 using System.IO;
+using System.Management;
 using System.Reflection;
 using System.Runtime.InteropServices;
 using Microsoft.Win32;
@@ -30,6 +31,45 @@ internal static class Sistem
             // Kısıtlı hesaplarda okunamayabilir; bilgisayar adına düşülür.
         }
         return new CihazBilgisi(model[..Math.Min(model.Length, 200)], kimlik ?? Environment.MachineName);
+    }
+
+    /// <summary>
+    /// Uzak yönetim ajanıyla aynı kaynak (Win32_ComputerSystemProduct.UUID + Win32_BIOS.SerialNumber);
+    /// sunucu bu ikiliden ajanın donanım kimliğini üretip cihazı bulur. Okunamazsa (null, null).
+    /// </summary>
+    public static (string? Uuid, string? Seri) DonanimKimligiOku()
+    {
+        static string? Oku(string sinif, string alan)
+        {
+            using var arama = new ManagementObjectSearcher($"SELECT {alan} FROM {sinif}");
+            foreach (var nesne in arama.Get())
+                using (nesne) return nesne[alan]?.ToString()?.Trim();
+            return null;
+        }
+
+        try
+        {
+            var uuid = Oku("Win32_ComputerSystemProduct", "UUID");
+            return (SahteUuidMi(uuid) ? null : uuid, Oku("Win32_BIOS", "SerialNumber"));
+        }
+        catch (Exception e) when (e is ManagementException or COMException or UnauthorizedAccessException)
+        {
+            return (null, null);
+        }
+    }
+
+    /// <summary>
+    /// Üreticinin doldurmadığı yer tutucu UUID'ler (tümü 0 / tümü F, OEM şablonu) birçok
+    /// bilgisayarda aynıdır; bunlarla eşleştirme yanlış cihaza yazar.
+    /// </summary>
+    private static bool SahteUuidMi(string? uuid)
+    {
+        if (string.IsNullOrWhiteSpace(uuid)) return true;
+        var hex = uuid.Replace("-", "").ToUpperInvariant();
+        return hex.Length != 32
+            || hex.All(c => c == '0')
+            || hex.All(c => c == 'F')
+            || hex == "03000200040005000006000700080009";
     }
 
     /// <summary>Windows oturumu açıldığında uygulamayı tepsiye küçültülmüş olarak başlatır.</summary>

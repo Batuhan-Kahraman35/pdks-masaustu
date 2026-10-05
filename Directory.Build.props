@@ -1,7 +1,7 @@
 <Project>
   <!-- Tüm projeler için ortak ayarlar. Sürüm yalnız buradan değişir; Velopack paketi de bu değeri kullanır. -->
   <PropertyGroup>
-    <Version>0.1.3</Version>
+    <Version>0.2.0</Version>
     <Authors>Batuhan KAHRAMAN</Authors>
     <Product>PDKS Masaüstü</Product>
     <Copyright>© 2026 Batuhan KAHRAMAN</Copyright>

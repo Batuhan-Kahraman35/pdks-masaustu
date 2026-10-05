@@ -38,6 +38,7 @@ public class TakipKoordinatoruTestleri
         public Task<MarkaAyarlari> AyarlarGetirAsync(CancellationToken ct = default) => throw new NotSupportedException();
         public Task<EkipDurumYaniti> EkipDurumGetirAsync(CancellationToken ct = default) => throw new NotSupportedException();
         public Task<IReadOnlyList<EkipGecmisKaydi>> EkipGecmisGetirAsync(int kullaniciId, DateOnly tarih, CancellationToken ct = default) => throw new NotSupportedException();
+        public Task<UzakCihaz> CihazEslestirAsync(string anakartUuid, string? biosSeri, CancellationToken ct = default) => throw new NotSupportedException();
     }
 
     private static DurumYaniti DurumOlustur(PersonelDurumu durum, HareketTipi sonTip, DateTimeOffset sonZaman) =>

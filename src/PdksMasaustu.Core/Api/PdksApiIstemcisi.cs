@@ -15,6 +15,7 @@ public interface IPdksApi
     Task<HareketYaniti> HareketGonderAsync(HareketIstegi istek, CancellationToken ct = default);
     Task<EkipDurumYaniti> EkipDurumGetirAsync(CancellationToken ct = default);
     Task<IReadOnlyList<EkipGecmisKaydi>> EkipGecmisGetirAsync(int kullaniciId, DateOnly tarih, CancellationToken ct = default);
+    Task<UzakCihaz> CihazEslestirAsync(string anakartUuid, string? biosSeri, CancellationToken ct = default);
 }
 
 /// <summary>
@@ -56,6 +57,12 @@ public sealed class PdksApiIstemcisi(HttpClient http, IOturumKasasi kasa) : IPdk
         var yanit = await GonderAsync<EkipGecmisYaniti>(new HttpRequestMessage(HttpMethod.Get, adres), tokenEkle: true, ct);
         return yanit.Kayitlar;
     }
+
+    public Task<UzakCihaz> CihazEslestirAsync(string anakartUuid, string? biosSeri, CancellationToken ct = default) =>
+        GonderAsync<UzakCihaz>(new HttpRequestMessage(HttpMethod.Put, "masaustu/cihaz")
+        {
+            Content = JsonContent.Create(new { anakartUuid, biosSeri }, options: JsonAyarlari.Secenekler),
+        }, tokenEkle: true, ct);
 
     private async Task<T> GonderAsync<T>(HttpRequestMessage istek, bool tokenEkle, CancellationToken ct)
     {

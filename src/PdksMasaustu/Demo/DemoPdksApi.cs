@@ -129,6 +129,10 @@ internal sealed class DemoPdksApi(IOturumKasasi kasa, TimeProvider saat) : IPdks
         return Task.FromResult<IReadOnlyList<EkipGecmisKaydi>>(kayitlar);
     }
 
+    public Task<UzakCihaz> CihazEslestirAsync(string anakartUuid, string? biosSeri, CancellationToken ct = default) =>
+        Task.FromResult(new UzakCihaz(Environment.MachineName, kasa.Oku()?.Personel.AdSoyad, "Merkez",
+            "123456789", null, saat.GetLocalNow(), true));
+
     private HareketKaydi Ekle(HareketTipi tip, DateTimeOffset zaman, bool otomatik)
     {
         var kayit = new HareketKaydi(++_sonId, tip, zaman, otomatik, "Merkez");

@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Net;
 using System.Windows;
 using System.Windows.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -17,14 +18,16 @@ public sealed partial class AnaGorunumModeli : ObservableObject
 {
     private readonly TakipKoordinatoru _takip;
     private readonly IOturumKasasi _kasa;
+    private readonly IPdksApi _api;
     private readonly TimeProvider _saat;
     private readonly DispatcherTimer _sureZamanlayici;
 
-    public AnaGorunumModeli(TakipKoordinatoru takip, IOturumKasasi kasa, TimeProvider saat, EkipGorunumModeli ekip, UygulamaSecenekleri secenekler, Marka marka)
+    public AnaGorunumModeli(TakipKoordinatoru takip, IOturumKasasi kasa, IPdksApi api, TimeProvider saat, EkipGorunumModeli ekip, UygulamaSecenekleri secenekler, Marka marka)
     {
         Marka = marka;
         _takip = takip;
         _kasa = kasa;
+        _api = api;
         _saat = saat;
         Ekip = ekip;
         DemoModu = secenekler.Demo;
@@ -52,6 +55,8 @@ public sealed partial class AnaGorunumModeli : ObservableObject
     [ObservableProperty] private bool _cevrimdisi;
     [ObservableProperty] private string? _mesaj;
     [ObservableProperty] private bool _mesajHata;
+    [ObservableProperty] private UzakCihaz? _cihaz;
+    [ObservableProperty] private string? _cihazUyari;
 
     [ObservableProperty]
     [NotifyCanExecuteChangedFor(nameof(GirisYapCommand), nameof(MolayaCikCommand), nameof(MoladanDonCommand), nameof(CikisYapCommand))]
@@ -101,6 +106,48 @@ public sealed partial class AnaGorunumModeli : ObservableObject
         Mesaj = null;
         DurumBasligi = "Yükleniyor…";
         DurumAciklama = "";
+        Cihaz = null;
+        CihazUyari = null;
+    }
+
+    /// <summary>
+    /// Bu bilgisayarı uzak yönetimdeki kaydıyla eşleştirir: sunucu cihaz açıklamasına
+    /// personelin adını yazar ve cihaz bilgisini döner. Hata takibi etkilemez.
+    /// </summary>
+    public async Task CihaziEslestirAsync()
+    {
+        var (uuid, seri) = await Task.Run(Sistem.DonanimKimligiOku);   // WMI yavaş olabilir
+        if (string.IsNullOrWhiteSpace(uuid))
+        {
+            CihazUyari = "Bilgisayar kimliği okunamadı ya da geçerli değil.";
+            return;
+        }
+
+        try
+        {
+            Cihaz = await _api.CihazEslestirAsync(uuid, seri);
+            CihazUyari = null;
+        }
+        catch (PdksApiHatasi h) when (h.DurumKodu == HttpStatusCode.NotFound)
+        {
+            Cihaz = null;
+            CihazUyari = "Bu bilgisayarda uzak yönetim ajanı kurulu değil.";
+        }
+        catch (PdksApiHatasi h) when (h.DurumKodu == HttpStatusCode.BadRequest)
+        {
+            Cihaz = null;
+            CihazUyari = "Bilgisayar kimliği uzak yönetimde tanınmadı.";
+        }
+        catch (PdksApiHatasi h) when (h.DurumKodu == HttpStatusCode.ServiceUnavailable)
+        {
+            Cihaz = null;
+            CihazUyari = "Uzak yönetim bağlantısı henüz tanımlanmamış.";
+        }
+        catch (Exception e) when (e is not OturumGecersizHatasi)
+        {
+            // Bir sonraki açılışta yeniden denenir.
+            Sistem.HataYaz(e);
+        }
     }
 
     private async Task HareketAsync(HareketTipi tip)

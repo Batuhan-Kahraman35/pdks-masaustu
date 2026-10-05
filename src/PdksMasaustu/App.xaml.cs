@@ -109,6 +109,7 @@ public partial class App : Application
     {
         Servis<AnaGorunumModeli>().OturumuYukle();
         Servis<TakipKoordinatoru>().Baslat();
+        _ = Servis<AnaGorunumModeli>().CihaziEslestirAsync();
         if (pencereAc) AnaPencereyiGoster();
     }
 

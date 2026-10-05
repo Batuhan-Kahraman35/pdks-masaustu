@@ -173,6 +173,20 @@
                                 </StackPanel>
                             </UniformGrid>
                         </Border>
+
+                        <!-- Bu bilgisayar (uzak yönetim kaydı) -->
+                        <Border Style="{StaticResource Kart}" Margin="0,12,0,0">
+                            <StackPanel>
+                                <TextBlock Text="Bu bilgisayar" Style="{StaticResource Soluk}" FontSize="12" />
+                                <TextBlock Text="{Binding Cihaz.BilgisayarAdi, FallbackValue=–}" FontSize="17" FontWeight="SemiBold" Margin="0,2,0,0" />
+                                <TextBlock Style="{StaticResource Soluk}" Margin="0,6,0,0"
+                                           Visibility="{Binding Cihaz.AnyDeskId, Converter={x:Static g:Donustur.DoluysaGorunur}, FallbackValue=Collapsed}">
+                                    <Run Text="AnyDesk:" /> <Run Text="{Binding Cihaz.AnyDeskId, Mode=OneWay}" FontWeight="SemiBold" />
+                                </TextBlock>
+                                <TextBlock Text="{Binding CihazUyari}" Style="{StaticResource Soluk}" TextWrapping="Wrap" Margin="0,6,0,0"
+                                           Visibility="{Binding CihazUyari, Converter={x:Static g:Donustur.DoluysaGorunur}}" />
+                            </StackPanel>
+                        </Border>
                     </StackPanel>
 
                     <!-- Bugünkü hareketler -->
