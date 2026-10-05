@@ -1,0 +1,49 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net10.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <AssemblyName>PdksMasaustu</AssemblyName>
+    <RuntimeIdentifier>win-x64</RuntimeIdentifier>
+    <SelfContained>true</SelfContained>
+    <RootNamespace>PdksMasaustu</RootNamespace>
+    <!-- GetLastInputInfo için LibraryImport kaynak üreticisi -->
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <!-- WPF Fluent teması (ThemeMode) .NET 10'da hâlâ deneysel işaretli -->
+    <NoWarn>$(NoWarn);WPF0001</NoWarn>
+    <StartupObject>PdksMasaustu.Program</StartupObject>
+    <!-- Yayın betiği marka logosundan Varliklar\marka.ico üretir (gitignore); yoksa repodaki genel ikon -->
+    <UygulamaIkonu>Varliklar\uygulama.ico</UygulamaIkonu>
+    <UygulamaIkonu Condition="Exists('Varliklar\marka.ico')">Varliklar\marka.ico</UygulamaIkonu>
+    <ApplicationIcon>$(UygulamaIkonu)</ApplicationIcon>
+  </PropertyGroup>
+
+  <!-- Main metodunu Program.cs yazar (tek örnek kontrolü, Velopack kancaları) -->
+  <ItemGroup>
+    <ApplicationDefinition Remove="App.xaml" />
+    <Page Include="App.xaml" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <!-- Pencereler hep /Varliklar/uygulama.ico adresini kullanır; içerik seçilen ikondur -->
+    <Resource Include="$(UygulamaIkonu)" Link="Varliklar\uygulama.ico" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <ProjectReference Include="..\PdksMasaustu.Core\PdksMasaustu.Core.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.2" />
+    <PackageReference Include="H.NotifyIcon.Wpf" Version="2.4.1" />
+    <PackageReference Include="Microsoft.Extensions.Hosting" Version="10.0.12" />
+    <PackageReference Include="Velopack" Version="1.2.161" />
+  </ItemGroup>
+
+  <!-- Gerçek adresler yalnız yerelde durur (gitignore); repoda appsettings.example.json var. -->
+  <ItemGroup>
+    <None Include="appsettings.json" CopyToOutputDirectory="PreserveNewest" Condition="Exists('appsettings.json')" />
+  </ItemGroup>
+
+</Project>

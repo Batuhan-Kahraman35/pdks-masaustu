@@ -1,0 +1,32 @@
+<Window x:Class="PdksMasaustu.Gorunumler.DonusPenceresi"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:g="clr-namespace:PdksMasaustu.Gorunumler"
+        Icon="/Varliklar/uygulama.ico"
+        Title="Moladasınız"
+        Width="380" SizeToContent="Height"
+        ResizeMode="NoResize" Topmost="True" ShowInTaskbar="True"
+        WindowStartupLocation="Manual">
+
+    <StackPanel Margin="24,20">
+        <StackPanel Orientation="Horizontal">
+            <Border Width="36" Height="36" CornerRadius="18" Background="{x:Static g:Gorunum.Turuncu}">
+                <TextBlock Text="{x:Static g:Gorunum.IkonDuraklat}" FontFamily="{StaticResource IkonFont}" FontSize="16"
+                           Foreground="White" HorizontalAlignment="Center" VerticalAlignment="Center" />
+            </Border>
+            <TextBlock x:Name="BaslikMetni" Text="Tekrar hoş geldiniz" Style="{StaticResource AltBaslik}"
+                       VerticalAlignment="Center" Margin="12,0,0,0" />
+        </StackPanel>
+        <TextBlock x:Name="MesajMetni" TextWrapping="Wrap" Margin="0,14,0,20" />
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition />
+                <ColumnDefinition Width="10" />
+                <ColumnDefinition />
+            </Grid.ColumnDefinitions>
+            <Button Content="Molaya devam" HorizontalAlignment="Stretch" Height="36" IsCancel="True" Click="Devam_Click" />
+            <Button Grid.Column="2" Content="Moladan dön" HorizontalAlignment="Stretch" Height="36" IsDefault="True"
+                    Style="{DynamicResource AccentButtonStyle}" Click="Don_Click" />
+        </Grid>
+    </StackPanel>
+</Window>

@@ -1,0 +1,9 @@
+<Solution>
+  <Folder Name="/src/">
+    <Project Path="src/PdksMasaustu.Core/PdksMasaustu.Core.csproj" />
+    <Project Path="src/PdksMasaustu/PdksMasaustu.csproj" />
+  </Folder>
+  <Folder Name="/tests/">
+    <Project Path="tests/PdksMasaustu.Tests/PdksMasaustu.Tests.csproj" />
+  </Folder>
+</Solution>
